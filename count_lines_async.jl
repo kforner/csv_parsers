@@ -1,15 +1,14 @@
-PATH = "worldcitiespop.txt"
 
-function count_lines(buf, from = 1, to = length(buf))
+function count_lines(buf, from = 1, nb = length(buf) )
     eol = Int('\n')
-    nb = 0
-    the_size = length(buf)
+    lines = 0
+    to = min(from + nb - 1, length(buf))
     for i = from:to
         @inbounds if buf[i] == eol
-            nb += 1
+            lines += 1
         end
     end
-    return nb
+    return lines
 end
 
 
@@ -23,7 +22,7 @@ function read_file_by_buffer(path, chnl, buffer_size)
     read = 0
     while (read = readbytes!(fh, buffer)) > 0
         resize!(buffer, read)
-       put!(chnl, buffer)
+        put!(chnl, buffer)
    end
    close(chnl)
    close(fh)
@@ -48,5 +47,10 @@ function count_lines_async(path, buffer_size = 64000)
 end
 
 @time count_lines_async(path, the_size)
+# 0.07s
 @time count_lines_async(path, Int(round(the_size/4)))
+# 0.05s
 @time count_lines_async(path, 128000)
+# 45 ms
+
+@time count_lines_async(path, 2^15)

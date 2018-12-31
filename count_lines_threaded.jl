@@ -63,3 +63,11 @@ end
 # 0.029258 seconds
 @time count_lines_mmap_by_chunk(path, 100000)
 #  0.025177
+
+@time count_lines_mmap_threaded(path, 1000)
+# 0.025680 seconds
+@time count_lines_mmap_threaded(path, 10000)
+# 0.029258 seconds
+@time count_lines_mmap_threaded(path, 100000)
+
+@time count_lines_mmap_threaded(path)
